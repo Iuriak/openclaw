@@ -1340,11 +1340,21 @@ async function runWebSearch(params: {
       }),
     );
 
+    const content =
+      mapped.length === 0
+        ? "No results found."
+        : mapped
+            .map(
+              (r, i) =>
+                `${i + 1}. **${r.title || "Untitled"}** — ${r.url}\n${r.description ? `${r.description}\n` : ""}`,
+            )
+            .join("\n\n");
+    const citations = mapped.map((r) => ({ url: r.url, title: r.title || undefined }));
+
     const payload = {
       query: params.query,
       provider: params.provider,
       model: params.bochaModel ?? DEFAULT_BOCHA_MODEL,
-      count: mapped.length,
       tookMs: Date.now() - start,
       externalContent: {
         untrusted: true,
@@ -1352,7 +1362,8 @@ async function runWebSearch(params: {
         provider: params.provider,
         wrapped: true,
       },
-      results: mapped,
+      content: wrapWebContent(content),
+      citations,
     };
     writeCache(SEARCH_CACHE, cacheKey, payload, params.cacheTtlMs);
     return payload;
