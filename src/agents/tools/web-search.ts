@@ -1347,7 +1347,7 @@ async function runWebSearch(params: {
       baseUrl: params.bochaBaseUrl ?? DEFAULT_BOCHA_BASE_URL,
       model: params.bochaModel ?? DEFAULT_BOCHA_MODEL,
       timeoutSeconds: params.timeoutSeconds,
-      freshness: params.freshness,
+      freshness: params.freshness ? mapFreshnessToBocha(params.freshness) : undefined,
       summary: params.bochaSummary ?? true,
     });
 
