@@ -1,5 +1,5 @@
 ---
-summary: "Web search + fetch tools (Brave Search API, Perplexity direct/OpenRouter, Gemini Google Search grounding)"
+summary: "Web search + fetch tools (Brave Search API, Perplexity direct/OpenRouter, Bocha, Gemini Google Search grounding)"
 read_when:
   - You want to enable web_search or web_fetch
   - You need Brave Search API key setup
@@ -12,7 +12,7 @@ title: "Web Tools"
 
 OpenClaw ships two lightweight web tools:
 
-- `web_search` — Search the web via Brave Search API (default), Perplexity Sonar, or Gemini with Google Search grounding.
+- `web_search` — Search the web via Brave Search API (default), Perplexity Sonar, Bocha, or Gemini with Google Search grounding.
 - `web_fetch` — HTTP fetch + readable extraction (HTML → markdown/text).
 
 These are **not** browser automation. For JS-heavy sites or logins, use the
@@ -24,6 +24,7 @@ These are **not** browser automation. For JS-heavy sites or logins, use the
   - **Brave** (default): returns structured results (title, URL, snippet).
   - **Perplexity**: returns AI-synthesized answers with citations from real-time web search.
   - **Gemini**: returns AI-synthesized answers grounded in Google Search with citations.
+  - **Bocha**: Bing-compatible structured results (title, URL, snippet, summary); supports time-range (freshness). Get key at https://open.bocha.cn
 - Results are cached by query for 15 minutes (configurable).
 - `web_fetch` does a plain HTTP GET and extracts readable content
   (HTML → markdown/text). It does **not** execute JavaScript.
@@ -31,11 +32,12 @@ These are **not** browser automation. For JS-heavy sites or logins, use the
 
 ## Choosing a search provider
 
-| Provider            | Pros                                         | Cons                                     | API Key                                      |
-| ------------------- | -------------------------------------------- | ---------------------------------------- | -------------------------------------------- |
-| **Brave** (default) | Fast, structured results, free tier          | Traditional search results               | `BRAVE_API_KEY`                              |
-| **Perplexity**      | AI-synthesized answers, citations, real-time | Requires Perplexity or OpenRouter access | `OPENROUTER_API_KEY` or `PERPLEXITY_API_KEY` |
-| **Gemini**          | Google Search grounding, AI-synthesized      | Requires Gemini API key                  | `GEMINI_API_KEY`                             |
+| Provider            | Pros                                                  | Cons                                     | API Key                                      |
+| ------------------- | ----------------------------------------------------- | ---------------------------------------- | -------------------------------------------- |
+| **Brave** (default) | Fast, structured results, free tier                   | Traditional search results               | `BRAVE_API_KEY`                              |
+| **Perplexity**      | AI-synthesized answers, citations, real-time          | Requires Perplexity or OpenRouter access | `OPENROUTER_API_KEY` or `PERPLEXITY_API_KEY` |
+| **Gemini**          | Google Search grounding, AI-synthesized               | Requires Gemini API key                  | `GEMINI_API_KEY`                             |
+| **Bocha**           | Bing-compatible, fast, structured results, real-time; | Requires Bocha API Key                   | `BOCHA_API_KEY`                              |
 
 See [Brave Search setup](/brave-search) and [Perplexity Sonar](/perplexity) for provider-specific details.
 
@@ -47,6 +49,7 @@ If no `provider` is explicitly set, OpenClaw auto-detects which provider to use 
 2. **Gemini** — `GEMINI_API_KEY` env var or `search.gemini.apiKey` config
 3. **Perplexity** — `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY` env var or `search.perplexity.apiKey` config
 4. **Grok** — `XAI_API_KEY` env var or `search.grok.apiKey` config
+5. **Bocha** — `BOCHA_API_KEY` env var or `search.bocha.apikey` config
 
 If no keys are found, it falls back to Brave (you'll get a missing-key error prompting you to configure one).
 
@@ -59,7 +62,7 @@ Set the provider in config:
   tools: {
     web: {
       search: {
-        provider: "brave", // or "perplexity" or "gemini"
+        provider: "brave", // or "perplexity" or "gemini" or "bocha"
       },
     },
   },
@@ -208,6 +211,7 @@ Search the web using your configured provider.
 - API key for your chosen provider:
   - **Brave**: `BRAVE_API_KEY` or `tools.web.search.apiKey`
   - **Perplexity**: `OPENROUTER_API_KEY`, `PERPLEXITY_API_KEY`, or `tools.web.search.perplexity.apiKey`
+  - **Bocha**: `BOCHA_API_KEY` or `tools.web.search.bocha.apiKey` (get at https://open.bocha.cn)
 
 ### Config
 
