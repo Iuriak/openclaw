@@ -1220,7 +1220,7 @@ async function runWebSearch(params: {
           : params.provider === "gemini"
             ? `${params.provider}:${params.query}:${params.geminiModel ?? DEFAULT_GEMINI_MODEL}`
             : params.provider === "bocha"
-              ? `${params.provider}:${params.query}:${params.bochaModel ?? DEFAULT_BOCHA_MODEL}:${params.bochaBaseUrl ?? DEFAULT_BOCHA_BASE_URL}`
+              ? `${params.provider}:${params.query}:${params.bochaModel ?? DEFAULT_BOCHA_MODEL}:${params.bochaBaseUrl ?? DEFAULT_BOCHA_BASE_URL}:${params.freshness || "default"}:${String(params.bochaSummary ?? true)}`
               : `${params.provider}:${params.query}:${params.grokModel ?? DEFAULT_GROK_MODEL}:${String(params.grokInlineCitations ?? false)}`,
   );
   const cached = readCache(SEARCH_CACHE, cacheKey);
