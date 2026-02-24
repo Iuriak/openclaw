@@ -24,7 +24,7 @@ These are **not** browser automation. For JS-heavy sites or logins, use the
   - **Brave** (default): returns structured results (title, URL, snippet).
   - **Perplexity**: returns AI-synthesized answers with citations from real-time web search.
   - **Gemini**: returns AI-synthesized answers grounded in Google Search with citations.
-  - **Bocha**: Bing-compatible structured results (title, URL, snippet, summary); supports time-range (freshness). Get key at [https://open.bocha.cn](https://open.bocha.cn)
+  - **Bocha**: Bing-compatible structured results (title, URL, snippet, summary); supports time-range (freshness). Get key at [open.bocha.cn](https://open.bocha.cn)
 - Results are cached by query for 15 minutes (configurable).
 - `web_fetch` does a plain HTTP GET and extracts readable content
   (HTML ? markdown/text). It does **not** execute JavaScript.
@@ -37,7 +37,7 @@ These are **not** browser automation. For JS-heavy sites or logins, use the
 | **Brave** (default) | Fast, structured results, free tier                  | Traditional search results               | `BRAVE_API_KEY`                              |
 | **Perplexity**      | AI-synthesized answers, citations, real-time         | Requires Perplexity or OpenRouter access | `OPENROUTER_API_KEY` or `PERPLEXITY_API_KEY` |
 | **Gemini**          | Google Search grounding, AI-synthesized              | Requires Gemini API key                  | `GEMINI_API_KEY`                             |
-| **Bocha**           | Bing-compatible, fast, structured results, real-time | Requires Bocha API Key                   | `BOCHA_API_KEY`                              |
+| **Bocha**           | Bing-compatible, fast, structured results, real-time | Requires Bocha API Key                   | `BOCHA_API_KEY`                              |
 
 See [Brave Search setup](/brave-search) and [Perplexity Sonar](/perplexity) for provider-specific details.
 
@@ -211,7 +211,7 @@ Search the web using your configured provider.
 - API key for your chosen provider:
   - **Brave**: `BRAVE_API_KEY` or `tools.web.search.apiKey`
   - **Perplexity**: `OPENROUTER_API_KEY`, `PERPLEXITY_API_KEY`, or `tools.web.search.perplexity.apiKey`
-  - **Bocha**: `BOCHA_API_KEY` or `tools.web.search.bocha.apiKey` (get at [https://open.bocha.cn](https://open.bocha.cn))
+  - **Bocha**: `BOCHA_API_KEY` or `tools.web.search.bocha.apiKey` (get at [open.bocha.cn](https://open.bocha.cn))
 
 ### Config
 
@@ -255,7 +255,7 @@ await web_search({
 
 // French search with French UI
 await web_search({
-  query: "actualités",
+  query: "actualitÃ©s",
   country: "FR",
   search_lang: "fr",
   ui_lang: "fr",
