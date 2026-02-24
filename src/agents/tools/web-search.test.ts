@@ -17,6 +17,7 @@ const {
   resolveKimiModel,
   resolveKimiBaseUrl,
   extractKimiCitations,
+  mapFreshnessToBocha,
 } = __testing;
 
 describe("web_search perplexity baseUrl defaults", () => {

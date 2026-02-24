@@ -642,11 +642,14 @@ function resolveGeminiModel(gemini?: GeminiConfig): string {
   return fromConfig || DEFAULT_GEMINI_MODEL;
 }
 
-
 function resolveBochaConfig(search?: WebSearchConfig): BochaConfig {
-  if (!search || typeof search !== "object") return {};
+  if (!search || typeof search !== "object") {
+    return {};
+  }
   const bocha = "bocha" in search ? search.bocha : undefined;
-  if (!bocha || typeof bocha !== "object") return {};
+  if (!bocha || typeof bocha !== "object") {
+    return {};
+  }
   return bocha as BochaConfig;
 }
 
@@ -657,31 +660,43 @@ function resolveBochaApiKey(bocha?: BochaConfig): string | undefined {
 }
 
 function resolveBochaBaseUrl(bocha?: BochaConfig): string {
-  const fromConfig =
-    bocha && typeof bocha.baseUrl === "string" ? bocha.baseUrl.trim() : "";
+  const fromConfig = bocha && typeof bocha.baseUrl === "string" ? bocha.baseUrl.trim() : "";
   return fromConfig || DEFAULT_BOCHA_BASE_URL;
 }
 
 function resolveBochaModel(bocha?: BochaConfig): string {
-  const fromConfig =
-    bocha && typeof bocha.model === "string" ? bocha.model.trim() : "";
+  const fromConfig = bocha && typeof bocha.model === "string" ? bocha.model.trim() : "";
   return fromConfig || DEFAULT_BOCHA_MODEL;
 }
 
 function resolveBochaSummary(bocha?: BochaConfig): boolean {
-  if (bocha && typeof bocha.summary === "boolean") return bocha.summary;
+  if (bocha && typeof bocha.summary === "boolean") {
+    return bocha.summary;
+  }
   return true;
 }
 
 /** Map Brave-style freshness to Bocha API values (oneDay, oneWeek, oneMonth, oneYear, or date range). */
 function mapFreshnessToBocha(braveFreshness: string | undefined): string | undefined {
-  if (!braveFreshness) return undefined;
+  if (!braveFreshness) {
+    return undefined;
+  }
   const lower = braveFreshness.toLowerCase();
-  if (lower === "pd") return "oneDay";
-  if (lower === "pw") return "oneWeek";
-  if (lower === "pm") return "oneMonth";
-  if (lower === "py") return "oneYear";
-  if (braveFreshness.includes("to")) return braveFreshness.replace(/to/gi, "..");
+  if (lower === "pd") {
+    return "oneDay";
+  }
+  if (lower === "pw") {
+    return "oneWeek";
+  }
+  if (lower === "pm") {
+    return "oneMonth";
+  }
+  if (lower === "py") {
+    return "oneYear";
+  }
+  if (braveFreshness.includes("to")) {
+    return braveFreshness.replace(/to/gi, "..");
+  }
   return braveFreshness;
 }
 
@@ -1127,7 +1142,9 @@ async function runBochaSearch(params: {
     count: Math.min(50, Math.max(1, params.count)),
     summary: params.summary ?? true,
   };
-  if (params.freshness) body.freshness = params.freshness;
+  if (params.freshness) {
+    body.freshness = params.freshness;
+  }
 
   const res = await fetch(endpoint, {
     method: "POST",
@@ -1141,19 +1158,23 @@ async function runBochaSearch(params: {
 
   const textResult = await readResponseText(res);
   if (!res.ok) {
-    throw new Error(`Bocha Web Search API error (${res.status}): ${textResult.text || res.statusText}`);
+    throw new Error(
+      `Bocha Web Search API error (${res.status}): ${textResult.text || res.statusText}`,
+    );
   }
 
   const data = JSON.parse(textResult.text || "{}") as BochaSearchResponse;
   if (data.code !== undefined && data.code !== 200) {
-    throw new Error(`Bocha Web Search API error (code ${data.code}): ${(data as { msg?: string }).msg ?? textResult.text}`);
+    throw new Error(
+      `Bocha Web Search API error (code ${data.code}): ${(data as { msg?: string }).msg ?? textResult.text}`,
+    );
   }
 
   const items = data.data?.webPages?.value ?? [];
   const mapped = items.map((entry) => ({
     title: entry.name ?? "",
     url: entry.url ?? "",
-    description: (entry.summary ?? entry.snippet) ?? "",
+    description: entry.summary ?? entry.snippet ?? "",
     published: entry.datePublished ?? entry.dateLastCrawled ?? undefined,
     siteName: entry.siteName ?? resolveSiteName(entry.url ?? ""),
   }));
@@ -1330,15 +1351,22 @@ async function runWebSearch(params: {
       summary: params.bochaSummary ?? true,
     });
 
-    const mapped = (bochaResult.results as Array<{ title?: string; url?: string; description?: string; published?: string; siteName?: string }> ?? []).map(
-      (entry) => ({
-        title: (entry.title ?? "") ? wrapWebContent(entry.title ?? "", "web_search") : "",
-        url: entry.url ?? "",
-        description: (entry.description ?? "") ? wrapWebContent(entry.description ?? "", "web_search") : "",
-        published: entry.published,
-        siteName: entry.siteName,
-      }),
-    );
+    const mapped = (
+      (bochaResult.results as Array<{
+        title?: string;
+        url?: string;
+        description?: string;
+        published?: string;
+        siteName?: string;
+      }>) ?? []
+    ).map((entry) => ({
+      title: (entry.title ?? "") ? wrapWebContent(entry.title ?? "", "web_search") : "",
+      url: entry.url ?? "",
+      description:
+        (entry.description ?? "") ? wrapWebContent(entry.description ?? "", "web_search") : "",
+      published: entry.published,
+      siteName: entry.siteName,
+    }));
 
     const content =
       mapped.length === 0
@@ -1498,10 +1526,16 @@ export function createWebSearchTool(options?: {
       const search_lang = readStringParam(params, "search_lang");
       const ui_lang = readStringParam(params, "ui_lang");
       const rawFreshness = readStringParam(params, "freshness");
-      if (rawFreshness && provider !== "brave" && provider !== "perplexity" && provider !== "bocha") {
+      if (
+        rawFreshness &&
+        provider !== "brave" &&
+        provider !== "perplexity" &&
+        provider !== "bocha"
+      ) {
         return jsonResult({
           error: "unsupported_freshness",
-          message: "freshness is only supported by the Brave, Perplexity and Bocha web_search providers.",
+          message:
+            "freshness is only supported by the Brave, Perplexity and Bocha web_search providers.",
           docs: "https://docs.openclaw.ai/tools/web",
         });
       }
