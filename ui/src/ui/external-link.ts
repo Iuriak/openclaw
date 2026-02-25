@@ -1,19 +1,19 @@
-/**
- * Open external links with noopener,noreferrer. Used by chat/UI to avoid
- * window.opener and referrer leakage.
- */
+const REQUIRED_EXTERNAL_REL_TOKENS = ["noopener", "noreferrer"] as const;
 
-// Type assertion: DOM types may expect literal union for windowFeatures.
-const FEATURES = "noopener,noreferrer" as "noopener" | "noreferrer";
+export const EXTERNAL_LINK_TARGET = "_blank";
 
-export function openExternalLink(url: string): Window | null {
-  const w = window.open(url, "_blank", FEATURES);
-  if (w) {
-    w.opener = null;
+export function buildExternalLinkRel(currentRel?: string): string {
+  const extraTokens: string[] = [];
+  const seen = new Set(REQUIRED_EXTERNAL_REL_TOKENS);
+
+  for (const rawToken of (currentRel ?? "").split(/\s+/)) {
+    const token = rawToken.trim().toLowerCase();
+    if (!token || seen.has(token)) {
+      continue;
+    }
+    seen.add(token);
+    extraTokens.push(token);
   }
-  return w;
-}
 
-export function setRelNoOpener(el: Element): void {
-  el.setAttribute("rel", FEATURES);
+  return [...REQUIRED_EXTERNAL_REL_TOKENS, ...extraTokens].join(" ");
 }
