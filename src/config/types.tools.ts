@@ -488,7 +488,7 @@ export type ToolsConfig = {
       /** Bocha-specific configuration (used when provider="bocha"). */
       bocha?: {
         /** Bocha API key (defaults to BOCHA_API_KEY env var). */
-        apiKey?: string;
+        apiKey?: SecretInput;
         /** Base URL for API requests (defaults to "https://api.bocha.cn/v1"). */
         baseUrl?: string;
         /** Model to use (defaults to "web-search"). */

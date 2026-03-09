@@ -19,6 +19,7 @@ import {
   readResponseText,
   resolveCacheTtlMs,
   resolveTimeoutSeconds,
+  withTimeout,
   writeCache,
 } from "./web-shared.js";
 
@@ -938,7 +939,7 @@ function mapFreshnessToBocha(braveFreshness: string | undefined): string | undef
     return braveFreshness.replace(/to/gi, "..");
   }
   return braveFreshness;
-};
+}
 
 async function withTrustedWebSearchEndpoint<T>(
   params: {
@@ -1594,7 +1595,7 @@ async function runBochaSearch(params: {
     tookMs: 0,
     results: mapped,
   };
-};
+}
 
 async function runBraveLlmContextSearch(params: {
   query: string;
